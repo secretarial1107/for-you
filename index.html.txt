@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Happy Rose Day! 🌹</title>
+    <style>
+        /* Layer 1: Enhanced Dynamic Background */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Critical for mobile to prevent accidental scrolling */
+            touch-action: none; /* Prevents zoom/scroll during interaction */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(-45deg, #ff4d6d, #ff758f, #c9184a, #800f2f);
+            background-size: 400% 400%;
+            animation: gradientMove 12s ease infinite;
+            font-family: 'Arial', sans-serif;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating Background Roses */
+        .rose-particle {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.6;
+            user-select: none;
+        }
+
+        /* Click/Tap Bouquet Roses */
+        .click-rose {
+            position: absolute;
+            pointer-events: none;
+            z-index: 5;
+            font-size: 2rem;
+            animation: bloomOut 2s ease-out forwards;
+        }
+
+        @keyframes bloomOut {
+            0% { transform: scale(0) translate(0, 0); opacity: 1; }
+            100% { transform: scale(1.5) translate(var(--tw), var(--th)); opacity: 0; }
+        }
+
+        /* Layer 2: Mobile-Friendly Glowing Text */
+        .glowing-text {
+            position: relative;
+            z-index: 10;
+            color: white;
+            /* Clamp ensures text is readable on tiny and large screens */
+            font-size: clamp(1.2rem, 7vw, 3rem);
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 0 0 10px #fff, 0 0 20px #ff4d6d;
+            animation: pulse 2s ease-in-out infinite alternate;
+            margin-bottom: 15px;
+            padding: 0 15px;
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); text-shadow: 0 0 10px #fff; }
+            to { transform: scale(1.03); text-shadow: 0 0 25px #ffb3c1, 0 0 35px #ff4d6d; }
+        }
+
+        /* Layer 3: GIF Container (Responsive) */
+        .gif-container {
+            position: relative;
+            z-index: 10;
+            width: 70vw;
+            max-width: 280px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 3px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            pointer-events: none; /* Allows clicks to pass through to the background garden */
+        }
+
+        /* Music Button - Positioned for thumb-reach */
+        #music-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.25);
+            border: 1px solid white;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 50px;
+            font-size: 14px;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body onclick="spawnBouquet(event)" ontouchstart="spawnBouquet(event)">
+
+    <audio id="bg-music" loop>
+        <source src="https://pagalnew.com/128-downloads/11401" type="audio/mpeg">
+    </audio>
+
+    <button id="music-btn" onclick="event.stopPropagation(); toggleMusic()">🎵 Play Music</button>
+
+    <div class="glowing-text">Happi Happi Rose Day, Beautiful ❤️</div>
+
+    <div class="gif-container">
+        <div class="tenor-gif-embed" data-postid="22536058" data-share-method="host" data-aspect-ratio="1" data-width="100%">
+            <a href="https://tenor.com/view/bear-kiss-bear-kisses-kiss-kisses-love-gif-22536058">Bear Kiss</a>
+        </div>
+        <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+    </div>
+
+    <script>
+        // Layer 1: Background Rose Field
+        function initBackground() {
+            for (let i = 0; i < 50; i++) {
+                const rose = document.createElement('div');
+                rose.className = 'rose-particle';
+                rose.innerText = '🌹';
+                rose.style.left = Math.random() * 100 + 'vw';
+                rose.style.top = Math.random() * 100 + 'vh';
+                rose.style.fontSize = (Math.random() * 1 + 0.5) + 'rem';
+                document.body.appendChild(rose);
+                animateElement(rose);
+            }
+        }
+
+        function animateElement(el) {
+            const x = (Math.random() - 0.5) * 300;
+            const y = (Math.random() - 0.5) * 300;
+            el.animate([
+                { transform: 'translate(0, 0) rotate(0deg)' },
+                { transform: `translate(${x}px, ${y}px) rotate(${Math.random() * 360}deg)` }
+            ], {
+                duration: 5000 + Math.random() * 5000,
+                iterations: Infinity,
+                direction: 'alternate',
+                easing: 'ease-in-out'
+            });
+        }
+
+        // The Rose Garden Effect: Spawn roses on click/tap
+        function spawnBouquet(e) {
+            // Get coordinates for both mouse and touch
+            const charX = e.pageX || (e.touches ? e.touches[0].pageX : 0);
+            const charY = e.pageY || (e.touches ? e.touches[0].pageY : 0);
+
+            for (let i = 0; i < 6; i++) {
+                const r = document.createElement('div');
+                r.className = 'click-rose';
+                r.innerText = '🌹';
+                r.style.left = charX + 'px';
+                r.style.top = charY + 'px';
+                
+                // Random directions for the bouquet to "explode" outward
+                const travelW = (Math.random() - 0.5) * 200 + 'px';
+                const travelH = (Math.random() - 0.5) * 200 + 'px';
+                r.style.setProperty('--tw', travelW);
+                r.style.setProperty('--th', travelH);
+
+                document.body.appendChild(r);
+                
+                // Remove from DOM after animation finishes
+                setTimeout(() => r.remove(), 2000);
+            }
+        }
+
+        function toggleMusic() {
+            const music = document.getElementById('bg-music');
+            const btn = document.getElementById('music-btn');
+            if (music.paused) {
+                music.play().catch(() => alert("Add an MP3 link to enable music!"));
+                btn.innerText = "⏸ Pause Music";
+            } else {
+                music.pause();
+                btn.innerText = "🎵 Play Music";
+            }
+        }
+
+        window.onload = initBackground;
+    </script>
+</body>
+</html>
